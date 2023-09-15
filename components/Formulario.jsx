@@ -123,39 +123,43 @@ const Formulario =({modalVisible, newDateHandler, setPacientes,pacientes}) =>{
 }
 
 const styles = StyleSheet.create({
-    container:{
-        flex:1,
-        backgroundColor: '#e3d5ca',
+    container: {
+      flex: 1,
+      backgroundColor: '#F5F5F5', // Color de fondo más claro
     },
-    group:{
-        marginTop:10,
-        marginHorizontal:30,
-        marginBottom:10,
+    group: {
+      marginTop: 10,
+      marginHorizontal: 20, // Menos margen horizontal
+      marginBottom: 10,
     },
-    input:{
-        marginTop: 10,
-        marginBottom:10,
-        backgroundColor: '#d5bdaf',
-        padding: 10,
-        borderRadius: 12,
-      },
-      label :{
-        marginTop: 15,
-        fontSize: 20,
-        fontWeight: '600'
-      },
+    input: {
+      marginTop: 10,
+      marginBottom: 10,
+      backgroundColor: '#FFFFFF', // Fondo blanco
+      padding: 12, // Más espacio de relleno
+      borderRadius: 8, // Bordes más redondeados
+      borderWidth: 1, // Agregamos un borde
+      borderColor: '#E0E0E0', // Color del borde
+    },
+    label: {
+      fontSize: 18, // Tamaño de fuente ligeramente más pequeño
+      fontWeight: '600',
+      color: '#333333', // Color de texto más oscuro
+      marginTop: 10, // Menos espacio superior
+    },
     title: {
-        fontSize:30,
-        fontWeight: '600',
-        textAlign: 'center',  
+      fontSize: 24, // Tamaño de fuente más pequeño
+      fontWeight: '600',
+      textAlign: 'center',
+      marginBottom: 20, // Más espacio inferior
     },
-    titleBold:{
-        fontWeight: '900'
+    titleBold: {
+      fontWeight: '700', // Fuente más negra
     },
-    inputSymptoms:{
-        height: 100,
-        marginBottom: 20,
-    }
-
-})
+    inputSymptoms: {
+      height: 80, // Altura del cuadro de entrada de síntomas reducida
+      marginBottom: 15, // Más espacio inferior
+    },
+  });
+  
 export default Formulario
