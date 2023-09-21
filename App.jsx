@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import type {PropsWithChildren} from 'react';
+
 import {
+  FlatList,
   Pressable,
   SafeAreaView,
   ScrollView,
@@ -10,21 +11,11 @@ import {
   View,
 } from 'react-native';
 import Formulario from './components/Formulario';
+import Paciente from './components/Paciente';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-type Paciente = {
-  paciente: string;
-  propietario: string;
-  email: string;
-  telefono: string;
-  date: Date;
-  sintomas: string;
-};
-function App(): JSX.Element {
+function App() {
   const [modalVisible, setModalVisible] = useState(false)
-  const [pacientes, setPacientes] = useState<Paciente[]>([])
+  const [pacientes, setPacientes] = useState([])
   const newDateHandler =() =>{
     setModalVisible(false)
   }
@@ -34,6 +25,40 @@ function App(): JSX.Element {
       <Text style={styles.title}> Administrador de citas {''}
         <Text style={styles.titleBold}> Veterinaria</Text>
       </Text>
+      <Text style={styles.textCitasHechas}>Citas hechas</Text>
+
+      {pacientes.length === 0 ? 
+      <Text style={styles.noPacientes}>No hay pacientes</Text>:
+      <FlatList
+        data={pacientes}
+        keyExtractor={item => item.id}
+        renderItem={({item})=>{
+          return <Paciente item={item}/>
+        }}
+        // renderItem={({ item: paciente }) => ( Aqui de la forma original que yo hice
+        //   <View style={styles.pacienteItem} >
+        //     <Text style={styles.label}>Nombre del Paciente:</Text>
+        //     <Text>{paciente.paciente}</Text>
+
+        //     <Text style={styles.label} >Propietario:</Text>
+        //     <Text>{paciente.propietario}</Text>
+
+        //     <Text style={styles.label} >Email del propietario:</Text>
+        //     <Text>{paciente.email}</Text>
+
+        //     <Text style={styles.label} >Telefono del propietario:</Text>
+        //     <Text>{paciente.telefono}</Text>
+
+        //     <Text style={styles.label} >Fecha:</Text>
+        //     <Text>{paciente.date.toDateString()}</Text>
+
+        //     <Text style={styles.label} >Sintomas:</Text>
+        //     <Text>{paciente.sintomas}</Text>
+        //   </View>
+        // )}
+      />
+      }
+      {/* <ScrollView>
       <View>
       <Text style={styles.textCitasHechas}>Citas hechas</Text>
       {pacientes.map((paciente, index) => (
@@ -58,7 +83,7 @@ function App(): JSX.Element {
           </View>
         ))}
       </View>
-
+      </ScrollView> */}
       <Pressable
       style={styles.buttonStyle}
       onPress={()=>{
@@ -80,7 +105,7 @@ function App(): JSX.Element {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffe5d9',
+    backgroundColor: '#77dd77',
     justifyContent: 'center',
   },
   title: {
@@ -95,7 +120,7 @@ const styles = StyleSheet.create({
   buttonStyle: {
     padding: 15,
     borderRadius: 17,
-    backgroundColor: '#ffcad4',
+    backgroundColor: '#fftad4',
     marginVertical: 10,
     marginHorizontal: 50,
   },
@@ -123,7 +148,18 @@ const styles = StyleSheet.create({
   },
   label:{
     fontWeight: 'bold'
-  }
+  },
+  noPacientes:{
+    marginTop: 40,
+    textAlign: "center",
+    fontSize: 25,
+    textTransform: 'uppercase'
+  },
+  lista:{
+    backgroundColor: 'white',
+    
+  },
+
 });
 
 

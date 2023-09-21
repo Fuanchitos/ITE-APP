@@ -22,6 +22,7 @@ const Formulario =({modalVisible, newDateHandler, setPacientes,pacientes}) =>{
         }
 
         const nuevoPaciente ={
+            id: Date.now(),
             paciente,
             propietario,
             email,
@@ -63,8 +64,6 @@ const Formulario =({modalVisible, newDateHandler, setPacientes,pacientes}) =>{
             onChangeText={setPaciente}
             style={styles.input}
             placeholder="Nombre paciente" 
-            placeholderTextColor={''}
-            
             />
 
             <Text style={styles.label}>Nombre propietario</Text>
@@ -73,7 +72,7 @@ const Formulario =({modalVisible, newDateHandler, setPacientes,pacientes}) =>{
              onChangeText={setPropietario}
             style={styles.input}
             placeholder="Nombre propietario" 
-            placeholderTextColor={''}/>
+            />
 
             <Text style={styles.label}>Email propietario</Text>
             <TextInput 
@@ -81,7 +80,6 @@ const Formulario =({modalVisible, newDateHandler, setPacientes,pacientes}) =>{
              onChangeText={setEmail}
             style={styles.input}
             placeholder="Email propietario" 
-            placeholderTextColor={''}
             keyboardType='email-address'
             />
              <Text style={styles.label}>Telefono propietario</Text>
@@ -90,7 +88,6 @@ const Formulario =({modalVisible, newDateHandler, setPacientes,pacientes}) =>{
              onChangeText={setTelefono}
             style={styles.input}
             placeholder="Telefono propietario" 
-            placeholderTextColor={''}
             keyboardType='numeric'
             />
             
