@@ -1,15 +1,27 @@
 import { StyleSheet,Modal, SafeAreaView, Text, Button, TextInput, View, Pressable, StatusBar, ScrollView, Alert } from "react-native"
 import CustomButton from "./Button"
 import DatePicker from "react-native-date-picker"
-import React, { useState } from 'react';
-const Formulario =({modalVisible, newDateHandler, setPacientes,pacientes}) =>{
-   
+import React, { useEffect, useState } from 'react';
+const Formulario =({modalVisible, newDateHandler, setPacientes,pacientes, pacienteActualizado, setPacienteActualizado}) =>{
+    const [id, setId] = useState('')
     const [paciente, setPaciente] = useState('')
     const [propietario, setPropietario] = useState('')
     const [email, setEmail] = useState('')
     const [telefono, setTelefono] = useState('')
     const [date, setDate] = useState(new Date())
     const [sintomas, setSintomas] = useState('')
+
+    useEffect(()=>{
+        if(Object.keys(pacienteActualizado).length > 0){
+            setId(pacienteActualizado.id)
+            setPaciente(pacienteActualizado.paciente)
+            setPropietario(pacienteActualizado.propietario)
+            setEmail(pacienteActualizado.email)
+            setTelefono(pacienteActualizado.telefono)
+            setDate(pacienteActualizado.date)
+            setSintomas(pacienteActualizado.sintomas)
+        }
+    },[pacienteActualizado])
 
     const handleAppointment =() =>{
         if([paciente, propietario, email,telefono,sintomas].includes('')){
@@ -22,7 +34,6 @@ const Formulario =({modalVisible, newDateHandler, setPacientes,pacientes}) =>{
         }
 
         const nuevoPaciente ={
-            id: Date.now(),
             paciente,
             propietario,
             email,
@@ -30,29 +41,44 @@ const Formulario =({modalVisible, newDateHandler, setPacientes,pacientes}) =>{
             date,
             sintomas
         }
-        setPacientes([...pacientes,nuevoPaciente])
+        //Revisar si el registro es nuevo o es para edicion
+        if(id){
+            //Es para editar
+            nuevoPaciente.id = id
+            const pacientesActualizados = pacientes.map(p => p.id === nuevoPaciente.id ? nuevoPaciente : p)
+            setPacientes(pacientesActualizados)
+
+        } else{
+            //Nuevo registro
+            nuevoPaciente.id = Date.now()
+            setPacientes([...pacientes,nuevoPaciente])
+        }
+
         ClearFields()
         newDateHandler();
 
     }
     const ClearFields =() =>{
+        setId('')
         setPaciente('')
         setPropietario('')
         setEmail('')
         setTelefono('')
         setDate(new Date())
         setSintomas('')
+        setPacienteActualizado({})
     }
     return(
         <Modal animationType='slide' visible={modalVisible}>
             <StatusBar backgroundColor={'#333'}/>
             <ScrollView>
         <SafeAreaView style={styles.container}>
-        <Text style={styles.title}>Nueva {''}
-            <Text style={styles.titleBold}>Cita</Text>
-        </Text>
+        {id ? <Text style={styles.title}> Editando cita </Text> : <Text style={styles.title}> Nueva cita</Text>}
+        
         <CustomButton title ={'CANCELAR'}
         onPress={()=>{
+            //Limpiamos el objeto para que no entre de nuevo            
+            ClearFields()
             newDateHandler()
         }}
         customColor={'#edede9'}
@@ -64,15 +90,17 @@ const Formulario =({modalVisible, newDateHandler, setPacientes,pacientes}) =>{
             onChangeText={setPaciente}
             style={styles.input}
             placeholder="Nombre paciente" 
+            placeholderTextColor={''}
+            
             />
 
             <Text style={styles.label}>Nombre propietario</Text>
             <TextInput 
-             value={propietario}
-             onChangeText={setPropietario}
+            value={propietario}
+            onChangeText={setPropietario}
             style={styles.input}
             placeholder="Nombre propietario" 
-            />
+            placeholderTextColor={''}/>
 
             <Text style={styles.label}>Email propietario</Text>
             <TextInput 
@@ -80,6 +108,7 @@ const Formulario =({modalVisible, newDateHandler, setPacientes,pacientes}) =>{
              onChangeText={setEmail}
             style={styles.input}
             placeholder="Email propietario" 
+            placeholderTextColor={''}
             keyboardType='email-address'
             />
              <Text style={styles.label}>Telefono propietario</Text>
@@ -88,6 +117,7 @@ const Formulario =({modalVisible, newDateHandler, setPacientes,pacientes}) =>{
              onChangeText={setTelefono}
             style={styles.input}
             placeholder="Telefono propietario" 
+            placeholderTextColor={''}
             keyboardType='numeric'
             />
             
@@ -96,6 +126,7 @@ const Formulario =({modalVisible, newDateHandler, setPacientes,pacientes}) =>{
             <Text style={styles.label}>Fecha</Text>
             <DatePicker 
             date={date}
+            onDateChange={(fecha)=>{setDate(fecha)}}
             textColor="green"
         />
         </View>
@@ -107,7 +138,7 @@ const Formulario =({modalVisible, newDateHandler, setPacientes,pacientes}) =>{
         placeholderTextColor={"#666"}
         />
         <CustomButton 
-        title ={'Registrar'}
+        title ={id ?  "Editando cita"  : " Nueva cita" }
         onPress={()=>{
             handleAppointment()
         }}
@@ -120,43 +151,39 @@ const Formulario =({modalVisible, newDateHandler, setPacientes,pacientes}) =>{
 }
 
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      backgroundColor: '#F5F5F5', // Color de fondo más claro
+    container:{
+        flex:1,
+        backgroundColor: '#e3d5ca',
     },
-    group: {
-      marginTop: 10,
-      marginHorizontal: 20, // Menos margen horizontal
-      marginBottom: 10,
+    group:{
+        marginTop:10,
+        marginHorizontal:30,
+        marginBottom:10,
     },
-    input: {
-      marginTop: 10,
-      marginBottom: 10,
-      backgroundColor: '#FFFFFF', // Fondo blanco
-      padding: 12, // Más espacio de relleno
-      borderRadius: 8, // Bordes más redondeados
-      borderWidth: 1, // Agregamos un borde
-      borderColor: '#E0E0E0', // Color del borde
-    },
-    label: {
-      fontSize: 18, // Tamaño de fuente ligeramente más pequeño
-      fontWeight: '600',
-      color: '#333333', // Color de texto más oscuro
-      marginTop: 10, // Menos espacio superior
-    },
+    input:{
+        marginTop: 10,
+        marginBottom:10,
+        backgroundColor: '#d5bdaf',
+        padding: 10,
+        borderRadius: 12,
+      },
+      label :{
+        marginTop: 15,
+        fontSize: 20,
+        fontWeight: '600'
+      },
     title: {
-      fontSize: 24, // Tamaño de fuente más pequeño
-      fontWeight: '600',
-      textAlign: 'center',
-      marginBottom: 20, // Más espacio inferior
+        fontSize:30,
+        fontWeight: '600',
+        textAlign: 'center',  
     },
-    titleBold: {
-      fontWeight: '700', // Fuente más negra
+    titleBold:{
+        fontWeight: '900'
     },
-    inputSymptoms: {
-      height: 80, // Altura del cuadro de entrada de síntomas reducida
-      marginBottom: 15, // Más espacio inferior
-    },
-  });
-  
+    inputSymptoms:{
+        height: 100,
+        marginBottom: 20,
+    }
+
+})
 export default Formulario

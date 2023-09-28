@@ -9,6 +9,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Alert
 } from 'react-native';
 import Formulario from './components/Formulario';
 import Paciente from './components/Paciente';
@@ -16,8 +17,26 @@ import Paciente from './components/Paciente';
 function App() {
   const [modalVisible, setModalVisible] = useState(false)
   const [pacientes, setPacientes] = useState([])
+  const [pacienteActualizado, setPacienteActualizado] = useState({})
   const newDateHandler =() =>{
     setModalVisible(false)
+  }
+
+  const pacienteEditar = id =>{
+    const pacienteEditado = pacientes.filter(paciente => paciente.id === id)
+    setPacienteActualizado(pacienteEditado[0])
+    
+  }
+
+  const pacienteEliminar = id =>{
+    Alert.alert(
+    'Seguro que quiere eliminar esta cita?',
+    'Una vez que elimine el paciente no se va a poder recuerar',
+    [{text:'Cancelar'}, {text:'Eliminar', onPress:()=>{
+      const pacientesEliminado= pacientes.filter(paciente => paciente.id !== id)
+      setPacientes(pacientesEliminado)
+    }}]
+    )
   }
 
   return (
@@ -33,7 +52,7 @@ function App() {
         data={pacientes}
         keyExtractor={item => item.id}
         renderItem={({item})=>{
-          return <Paciente item={item}/>
+          return <Paciente item={item} setModalVisible={setModalVisible} pacienteEditar= {pacienteEditar} pacienteEliminar={pacienteEliminar}/>
         }}
         // renderItem={({ item: paciente }) => ( Aqui de la forma original que yo hice
         //   <View style={styles.pacienteItem} >
@@ -97,6 +116,8 @@ function App() {
       newDateHandler={newDateHandler}
       pacientes = {pacientes}
       setPacientes ={setPacientes}
+      pacienteActualizado = {pacienteActualizado}
+      setPacienteActualizado={setPacienteActualizado}
       />
     </SafeAreaView>
   );
