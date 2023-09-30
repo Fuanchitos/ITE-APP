@@ -42,7 +42,7 @@ const Paciente = ({item, setModalVisible, pacienteEditar, pacienteEliminar}) => 
               setModalVisible(true)
               pacienteEditar(id)
             }}
-            customColor={'#333'}/>
+            customColor={'#47d147'}/>
 
             <CustomButton
             title="Eliminar"
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     },
     button:{
         flex: 1,
-        flexDirection: 'row'
+        flexDirection: "column"
     }
   });
 
